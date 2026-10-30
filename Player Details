@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/css/styles.css">
+    <script src="static/css/scripts/scripts.js" defer></script>
+    <title>Player Details</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Player Details</h1>
+        <div id="player-details"></div>
+    </div>
+
+    <script>
+        const playerId = "{{ player_id }}"; // Get player ID from Flask
+        fetch(`https://www.thesportsdb.com/api/v1/json/{{ THE_SPORTS_DB_API_KEY }}/lookupplayer.php?id=${playerId}`)
+        //fetch(`https://www.thesportsdb.com/api/v1/json/3/lookupplayer.php?id=${playerId}`)
+            .then(response => response.json())
+            .then(data => {
+                const player = data.players[0];
+                const playerDetailsDiv = document.getElementById('player-details');
+                playerDetailsDiv.innerHTML = `
+                    <h2>${player.strPlayer}</h2>
+                    <p>Position: ${player.strPosition}</p>
+                    <p>Team: ${player.strTeam}</p>
+                    <p>Nationality: ${player.strNationality}</p>
+                    <img src="${player.strThumb}" alt="${player.strPlayer} Thumbnail" width="100">
+                    <p>Height: ${player.strHeight}</p>
+                    <p>Weight: ${player.strWeight}</p>
+                `;
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/css/styles.css">
+    <script src="static/css/scripts/scripts.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Sports Statistics Tracker</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Sports Statistics Tracker</h1>
+        <form id="sports-form" onsubmit="return handleSubmit(event);">
+            <label for="sport">Choose a Sport:</label>
+            <select id="sport" name="sport" required>
+                <option value="Soccer">Soccer</option>
+                <option value="Football">Football</option>
+                <option value="Baseball">Baseball</option>
+            </select>
+
+            <label for="team_or_player">Enter Team or Player</label>
+            <input type="text" id="team_or_player" name="team_or_player" required>
+
+            <label for="league_id">Enter League ID</label>
+            <input type="text" id="league_id" name="league_id" required placeholder="e.g., 1234 for Premier League">
+
+            <label for="season">Enter Season</label>
+            <input type="text" id="season" name="season" required placeholder="e.g., 2021">
+
+            <button type="submit">Get Data</button>
+        </form>
+        <div id="results"></div>
+    </div>
+</body>
+</html>
